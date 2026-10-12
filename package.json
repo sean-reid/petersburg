@@ -1,6 +1,6 @@
 {
   "name": "petersburg",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Play the St. Petersburg paradox against a casino that never runs out of money.",
