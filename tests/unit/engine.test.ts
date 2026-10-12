@@ -65,6 +65,13 @@ describe("a round", () => {
     expect(s.rounds).toBe(2);
   });
 
+  it("plays when the bankroll exactly meets the price", () => {
+    const st = settings({ bankroll: 10, zero: "stop" });
+    const s = newState(st);
+    expect(nextPrice(s, st)).toBe(10);
+    expect(s.bust).toBe(false);
+  });
+
   it("goes negative on credit", () => {
     const st = settings({ bankroll: 5 });
     const s = newState(st);

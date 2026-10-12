@@ -1,4 +1,4 @@
-import { DEFAULTS, type Settings } from "./engine.ts";
+import { DEFAULTS, type PriceUnit, type Settings } from "./engine.ts";
 import { formatSeed, parseSeed } from "./rng.ts";
 
 export interface Link {
@@ -7,22 +7,25 @@ export interface Link {
 }
 
 export const MAX_BANKROLL = 1_000_000_000_000;
+export const MAX_COINS = 1_000_000_000;
 
-function int(text: string | null, min: number, max: number, fallback: number): number {
-  if (text === null || !/^\d{1,13}$/.test(text)) return fallback;
+export const maxPrice = (unit: PriceUnit): number => (unit === "pct" ? 100 : MAX_COINS);
+
+export function clampInt(text: string | null, min: number, max: number, fallback: number): number {
+  if (text === null || !/^\d+$/.test(text.trim())) return fallback;
   const n = Number(text);
-  return n >= min && n <= max ? n : fallback;
+  if (!Number.isSafeInteger(n)) return max;
+  return Math.min(Math.max(n, min), max);
 }
 
 export function readLink(search: string): Link {
   const q = new URLSearchParams(search);
-  const unit = q.get("u") === "pct" ? "pct" : "coins";
+  const unit: PriceUnit = q.get("u") === "pct" ? "pct" : "coins";
   const zero = q.get("z") === "stop" ? "stop" : "credit";
-  const maxPrice = unit === "pct" ? 100 : MAX_BANKROLL;
   return {
     settings: {
-      bankroll: int(q.get("b"), 0, MAX_BANKROLL, DEFAULTS.bankroll),
-      price: int(q.get("p"), 1, maxPrice, Math.min(DEFAULTS.price, maxPrice)),
+      bankroll: clampInt(q.get("b"), 0, MAX_BANKROLL, DEFAULTS.bankroll),
+      price: clampInt(q.get("p"), 1, maxPrice(unit), DEFAULTS.price),
       unit,
       zero,
     },

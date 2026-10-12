@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "description": "Play the St. Petersburg paradox against a casino that never runs out of money.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
