@@ -1,0 +1,30 @@
+{
+  "name": "petersburg",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Play the St. Petersburg paradox against a casino that never runs out of money.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src scripts tests vite.config.ts playwright.config.ts eslint.config.js prettier.config.js --max-warnings 0",
+    "format": "prettier --write src scripts tests index.html vite.config.ts playwright.config.ts eslint.config.js prettier.config.js package.json tsconfig.json release-please-config.json .github",
+    "format:check": "prettier --check src scripts tests index.html vite.config.ts playwright.config.ts eslint.config.js prettier.config.js package.json tsconfig.json release-please-config.json .github",
+    "test": "vitest run",
+    "size": "node scripts/size.ts",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.6.3",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}

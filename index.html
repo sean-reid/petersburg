@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>petersburg</title>
+    <meta
+      name="description"
+      content="Play the St. Petersburg paradox against a casino that never runs out of money."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/fonts/jetbrains-mono-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/jetbrains-mono-medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <h1 class="wordmark">petersburg</h1>
+        <p class="lede">
+          Pay the casino to flip a coin until it lands tails. It pays 2 for a tails straight away,
+          doubled for every heads before it.
+        </p>
+      </header>
+
+      <main id="main"></main>
+
+      <footer class="colophon">
+        <a href="https://github.com/sean-reid/petersburg">source</a>
+        <a href="https://en.wikipedia.org/wiki/St._Petersburg_paradox">the paradox</a>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
