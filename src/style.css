@@ -165,7 +165,7 @@ a {
 }
 
 .segment button {
-  flex: 1;
+  flex: 1 0 auto;
   min-width: 44px;
   padding: 0 0.5rem;
 }
@@ -266,7 +266,8 @@ a {
 
 .figures {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
   gap: 1rem;
   margin: 0;
   padding-top: 1rem;
@@ -286,7 +287,7 @@ a {
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .figure dd.debt {
@@ -344,7 +345,7 @@ a {
   }
 
   .figures {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, auto);
   }
 
   .chart {

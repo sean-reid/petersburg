@@ -73,6 +73,18 @@ export function drawChart(
 
   if (buckets.length === 0) return { lo, hi };
 
+  if (buckets.length > 1) {
+    ctx.fillStyle = palette.rule;
+    ctx.beginPath();
+    buckets.forEach((b, i) => {
+      if (i === 0) ctx.moveTo(x(i), y(b.max));
+      else ctx.lineTo(x(i), y(b.max));
+    });
+    for (let i = buckets.length - 1; i >= 0; i--) ctx.lineTo(x(i), y(buckets[i]!.min));
+    ctx.closePath();
+    ctx.fill();
+  }
+
   const trace = (color: string, clipTop: number, clipBottom: number) => {
     ctx.save();
     ctx.beginPath();
@@ -82,10 +94,8 @@ export function drawChart(
     ctx.lineWidth = 1;
     ctx.beginPath();
     buckets.forEach((b, i) => {
-      const px = x(i);
-      if (i === 0) ctx.moveTo(px, y(b.max));
-      ctx.lineTo(px, y(b.max));
-      ctx.lineTo(px, y(b.min));
+      if (i === 0) ctx.moveTo(x(i), y(b.last));
+      else ctx.lineTo(x(i), y(b.last));
     });
     ctx.stroke();
     ctx.restore();
