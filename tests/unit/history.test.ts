@@ -48,7 +48,31 @@ describe("History", () => {
     expect(h.span * h.buckets.length).toBeGreaterThanOrEqual(100_000);
   });
 
-  it("rejects odd capacities", () => {
+  it("folds again at span 4 and 8", () => {
+    const h = new History(4);
+    for (let v = 1; v <= 9; v++) h.push(v);
+    expect(h.span).toBe(4);
+    expect(h.buckets).toEqual([
+      { min: 1, max: 4 },
+      { min: 5, max: 8 },
+      { min: 9, max: 9 },
+    ]);
+    for (let v = 10; v <= 16; v++) h.push(v);
+    expect(h.buckets).toHaveLength(4);
+    expect(h.buckets[3]).toEqual({ min: 13, max: 16 });
+    h.push(17);
+    expect(h.span).toBe(8);
+    expect(h.buckets).toEqual([
+      { min: 1, max: 8 },
+      { min: 9, max: 16 },
+      { min: 17, max: 17 },
+    ]);
+  });
+
+  it("rejects odd and tiny capacities", () => {
     expect(() => new History(3)).toThrow();
+    expect(() => new History(0)).toThrow();
+    expect(() => new History(1)).toThrow();
+    expect(new History(2).capacity).toBe(2);
   });
 });

@@ -36,9 +36,9 @@
       </header>
 
       <main id="main">
-        <form class="knobs" id="knobs" autocomplete="off">
+        <form class="knobs" autocomplete="off">
           <label class="knob">
-            <span>Bankroll</span>
+            <span>bankroll</span>
             <input
               type="number"
               id="bankroll"
@@ -48,9 +48,9 @@
               inputmode="numeric"
             />
           </label>
-          <div class="knob price">
+          <div class="price">
             <label class="knob">
-              <span>Price</span>
+              <span>price</span>
               <input type="number" id="price" name="price" min="1" step="1" inputmode="numeric" />
             </label>
             <div class="segment" role="group" aria-label="Price unit" id="unit">
@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="knob">
-            <span id="zero-label">At zero</span>
+            <span id="zero-label">at zero</span>
             <div class="segment" role="group" aria-labelledby="zero-label" id="zero">
               <button type="button" data-value="stop">stop</button>
               <button type="button" data-value="credit">credit</button>
@@ -72,7 +72,7 @@
         </form>
 
         <label class="speed">
-          <span>Speed</span>
+          <span>speed</span>
           <input type="range" id="speed" min="0" max="6" step="1" />
           <output id="speed-label" for="speed"></output>
         </label>
@@ -96,13 +96,13 @@
           </div>
         </dl>
 
-        <canvas class="chart" id="chart" aria-label="Bankroll over rounds"></canvas>
+        <canvas class="chart" id="chart" role="img" aria-label="Bankroll over rounds"></canvas>
 
         <p class="flips" id="flips">
           <span class="seq" id="seq"></span>
           <span class="outcome" id="outcome"></span>
         </p>
-        <p class="flips bust" id="bust" role="status" hidden></p>
+        <p class="flips" id="bust" role="status" aria-atomic="true"></p>
       </main>
 
       <footer class="colophon">

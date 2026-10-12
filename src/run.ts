@@ -1,20 +1,24 @@
 import { flip, newState, nextPrice, settle, step, type Settings, type State } from "./engine.ts";
 import { History } from "./history.ts";
 import { mulberry32, type Rng } from "./rng.ts";
-import { SPEEDS } from "./speed.ts";
+import type { Speed } from "./speed.ts";
 
 const MAX_DT = 100;
 const MAX_ROUNDS_PER_FRAME = 250_000;
+export const BUDGET_CHECK_EVERY = 256;
+
+export type Phase = "idle" | "running" | "paused" | "bust";
 
 export class Runner {
   state: State;
   history = new History();
   running = false;
-  seq: boolean[] = [];
+  ticks = 0;
   private rng: Rng;
   private acc = 0;
+  private speed: Speed | undefined;
   private inRound = false;
-  private heads = 0;
+  private flips: boolean[] = [];
   private price = 0;
 
   constructor(
@@ -30,12 +34,30 @@ export class Runner {
     return this.inRound;
   }
 
-  advance(dt: number, speed: number, budgetMs: number, now: () => number): void {
+  get phase(): Phase {
+    if (this.state.bust) return "bust";
+    if (this.running) return "running";
+    return this.state.rounds > 0 || this.inRound ? "paused" : "idle";
+  }
+
+  get seq(): readonly boolean[] {
+    if (this.inRound) return this.flips;
+    const last = this.state.last;
+    if (!last) return [];
+    const out = Array<boolean>(last.heads).fill(true);
+    out.push(false);
+    return out;
+  }
+
+  advance(dt: number, speed: Speed, budgetMs: number, now: () => number): void {
     if (!this.running) return;
-    const s = SPEEDS[speed] ?? SPEEDS[SPEEDS.length - 1]!;
-    dt = Math.min(dt, MAX_DT);
-    if (s.flipsPerSec !== undefined) this.flipMode(dt, 1000 / s.flipsPerSec);
-    else if (s.roundsPerSec !== undefined) this.roundMode(dt, s.roundsPerSec);
+    if (speed !== this.speed) {
+      this.speed = speed;
+      this.acc = 0;
+    }
+    dt = Math.max(0, Math.min(dt, MAX_DT));
+    if (speed.flipsPerSec !== undefined) this.flipMode(dt, 1000 / speed.flipsPerSec);
+    else if (speed.roundsPerSec !== undefined) this.roundMode(dt, speed.roundsPerSec);
     else this.maxMode(budgetMs, now);
   }
 
@@ -55,19 +77,21 @@ export class Runner {
         return;
       }
       this.price = price;
-      this.heads = 0;
-      this.seq = [];
+      this.flips = [];
       this.inRound = true;
     }
     const heads = flip(this.rng);
-    this.seq.push(heads);
-    if (heads) {
-      this.heads++;
-      return;
-    }
-    settle(this.state, this.price, this.heads);
-    this.history.push(this.state.bankroll);
+    this.flips.push(heads);
+    this.ticks++;
+    if (heads) return;
+    settle(this.state, this.price, this.flips.length - 1);
     this.inRound = false;
+    this.complete();
+  }
+
+  private complete(): void {
+    this.history.push(this.state.bankroll);
+    if (nextPrice(this.state, this.settings) === undefined) this.running = false;
   }
 
   private roundMode(dt: number, rps: number): void {
@@ -83,24 +107,23 @@ export class Runner {
     const start = now();
     let n = 0;
     while (this.stepOnce()) {
-      if (++n % 256 === 0 && now() - start >= budgetMs) break;
+      if (++n % BUDGET_CHECK_EVERY === 0 && now() - start >= budgetMs) break;
     }
   }
 
   private finishRound(): void {
+    if (!this.inRound) return;
     while (this.inRound) this.tick();
-    this.acc = Math.min(this.acc, 1);
+    this.acc = 0;
   }
 
   private stepOnce(): boolean {
-    const round = step(this.state, this.settings, this.rng);
-    if (round === undefined) {
+    if (step(this.state, this.settings, this.rng) === undefined) {
       this.running = false;
       return false;
     }
-    this.history.push(this.state.bankroll);
-    this.seq = Array<boolean>(round.heads).fill(true);
-    this.seq.push(false);
-    return true;
+    this.ticks++;
+    this.complete();
+    return this.running;
   }
 }
