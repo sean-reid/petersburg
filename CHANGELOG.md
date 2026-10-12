@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/sean-reid/petersburg/compare/petersburg-v0.1.0...petersburg-v0.1.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* draw the bankroll line through bucket closes and keep segment labels whole ([#9](https://github.com/sean-reid/petersburg/issues/9)) ([b224b13](https://github.com/sean-reid/petersburg/commit/b224b13f4fdfff31c4c078dc9e23015dda25fe80))
+
 ## 0.1.0 (2026-10-12)
 
 
