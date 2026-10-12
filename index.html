@@ -35,7 +35,75 @@
         </p>
       </header>
 
-      <main id="main"></main>
+      <main id="main">
+        <form class="knobs" id="knobs" autocomplete="off">
+          <label class="knob">
+            <span>Bankroll</span>
+            <input
+              type="number"
+              id="bankroll"
+              name="bankroll"
+              min="0"
+              step="1"
+              inputmode="numeric"
+            />
+          </label>
+          <div class="knob price">
+            <label class="knob">
+              <span>Price</span>
+              <input type="number" id="price" name="price" min="1" step="1" inputmode="numeric" />
+            </label>
+            <div class="segment" role="group" aria-label="Price unit" id="unit">
+              <button type="button" data-value="coins">coins</button>
+              <button type="button" data-value="pct">%</button>
+            </div>
+          </div>
+          <div class="knob">
+            <span id="zero-label">At zero</span>
+            <div class="segment" role="group" aria-labelledby="zero-label" id="zero">
+              <button type="button" data-value="stop">stop</button>
+              <button type="button" data-value="credit">credit</button>
+            </div>
+          </div>
+          <div class="knob run">
+            <button type="button" class="primary" id="play">Play</button>
+            <button type="button" id="reset">Reset</button>
+          </div>
+        </form>
+
+        <label class="speed">
+          <span>Speed</span>
+          <input type="range" id="speed" min="0" max="6" step="1" />
+          <output id="speed-label" for="speed"></output>
+        </label>
+
+        <dl class="figures">
+          <div class="figure">
+            <dt>rounds</dt>
+            <dd id="f-rounds">0</dd>
+          </div>
+          <div class="figure">
+            <dt>bankroll</dt>
+            <dd id="f-bankroll">0</dd>
+          </div>
+          <div class="figure">
+            <dt>avg payout</dt>
+            <dd id="f-avg">0.00</dd>
+          </div>
+          <div class="figure">
+            <dt>longest streak</dt>
+            <dd id="f-streak">0</dd>
+          </div>
+        </dl>
+
+        <canvas class="chart" id="chart" aria-label="Bankroll over rounds"></canvas>
+
+        <p class="flips" id="flips">
+          <span class="seq" id="seq"></span>
+          <span class="outcome" id="outcome"></span>
+        </p>
+        <p class="flips bust" id="bust" role="status" hidden></p>
+      </main>
 
       <footer class="colophon">
         <a href="https://github.com/sean-reid/petersburg">source</a>
